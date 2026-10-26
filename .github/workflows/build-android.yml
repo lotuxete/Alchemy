@@ -1,0 +1,52 @@
+
+name: Build Alchemy Android APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Alchemy 1.0.0
+        uses: actions/checkout@v4
+        with:
+          ref: 968bc4fcff724df3b0589b3c1ef3e8b37dd85126
+          submodules: recursive
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.2'
+          channel: stable
+          cache: true
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Prepare custom dependencies
+        shell: pwsh
+        run: ./run_build_runner.ps1
+
+      - name: Get project dependencies
+        run: flutter pub get
+
+      - name: Build Android APKs
+        run: flutter build apk --split-per-abi --release
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Alchemy-Android-APKs
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
