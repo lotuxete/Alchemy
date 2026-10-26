@@ -56,23 +56,14 @@ jobs:
       - name: Get project dependencies
         run: flutter pub get
         
-      - name: Generate Dart code
-        run: dart run build_runner build --delete-conflicting-outputs
-        
-      - name: Build Android APKs
-        run: flutter build apk --split-per-abi --release
-
-      - name: Generate main project code
+      - name: Verify main project code
         shell: pwsh
         run: |
-          dart run build_runner build --delete-conflicting-outputs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
           if (!(Test-Path "lib/utils/env.g.dart")) {
             Write-Error "No se ha generado lib/utils/env.g.dart"
             exit 1
-           } 
-           
+          }
+  
       - name: Generate scrobblenaut code
         shell: pwsh
         run: |
@@ -92,7 +83,10 @@ jobs:
           finally {
             Pop-Location
           }
-          
+
+      - name: Build Android APKs
+        run: flutter build apk --split-per-abi --release
+
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
