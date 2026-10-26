@@ -19,9 +19,6 @@ function Invoke-BuildRunner {
     Write-Host "Running 'flutter pub get' for $name" -ForegroundColor Green
     flutter pub get
 
-    Write-Host "Running 'flutter pub upgrade' for $name" -ForegroundColor Green
-    flutter pub upgrade
-
     Write-Host "Running 'dart run build_runner clean' for $name" -ForegroundColor Green
     dart run build_runner clean
 
