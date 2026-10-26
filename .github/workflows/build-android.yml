@@ -84,26 +84,6 @@ jobs:
             Pop-Location
           }
           
-      - name: Generate scrobblenaut code
-        shell: pwsh
-        run: |
-          Push-Location scrobblenaut
-          try {
-            flutter pub get
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-            dart run build_runner build --delete-conflicting-outputs
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-            if (!(Test-Path "lib/src/lastfm.g.dart")) {
-              Write-Error "No se ha generado lib/src/lastfm.g.dart"
-              exit 1
-            }
-          }
-          finally {
-            Pop-Location
-          }
-
       - name: Build Android APKs
         run: flutter build apk --split-per-abi --release
 
