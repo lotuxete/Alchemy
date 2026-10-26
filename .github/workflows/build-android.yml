@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Alchemy 1.0.0
         uses: actions/checkout@v4
         with:
-          ref: 968bc4fcff724df3b0589b3c1ef3e8b37dd85126
+          ref: master
           submodules: recursive
 
       - name: Set up Java
