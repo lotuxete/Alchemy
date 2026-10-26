@@ -34,6 +34,21 @@ jobs:
       - name: Show Flutter version
         run: flutter --version
 
+      - name: Create temporary environment file
+        shell: pwsh
+        run: |
+          @"
+          deezerGatewayAPI = 'placeholder';
+          deezerMobileKey = 'placeholder';
+          lastFmApiKey = '';
+          lastFmApiSecret = '';
+          acrcloudHost = 'identify-eu-west-1.acrcloud.com';
+          acrcloudSongApiKey = '';
+          acrcloudSongApiSecret = '';
+          acrcloudHumsApiKey = '';
+          acrcloudHumsApiSecret = '';
+          "@ | Set-Content -Path lib/.env -Encoding utf8
+
       - name: Prepare custom dependencies
         shell: pwsh
         run: ./run_build_runner.ps1
