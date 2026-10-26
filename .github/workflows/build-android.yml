@@ -65,23 +65,34 @@ jobs:
       - name: Generate main project code
         shell: pwsh
         run: |
-          dart run build_runner clean
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           dart run build_runner build --delete-conflicting-outputs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+          if (!(Test-Path "lib/utils/env.g.dart")) {
+            Write-Error "No se ha generado lib/utils/env.g.dart"
+            exit 1
+           } 
+           
       - name: Generate scrobblenaut code
         shell: pwsh
         run: |
           Push-Location scrobblenaut
-          flutter pub get
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          dart run build_runner clean
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          dart run build_runner build --delete-conflicting-outputs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Pop-Location
+          try {
+            flutter pub get
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+            dart run build_runner build --delete-conflicting-outputs
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+            if (!(Test-Path "lib/src/lastfm.g.dart")) {
+              Write-Error "No se ha generado lib/src/lastfm.g.dart"
+              exit 1
+            }
+          }
+          finally {
+            Pop-Location
+          }
+          
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
