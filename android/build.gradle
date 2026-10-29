@@ -29,10 +29,10 @@ subprojects {
             def javaVersion = JavaVersion.VERSION_17
             
             android {
-                def androidApiVersion = 35 
+                def androidApiVersion = 36
                 compileSdk androidApiVersion
                 defaultConfig {
-                    targetSdk androidApiVersion
+                    targetSdk 35
                 }
                 compileOptions {
                     sourceCompatibility javaVersion
