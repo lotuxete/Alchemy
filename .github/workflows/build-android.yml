@@ -69,7 +69,8 @@ jobs:
         run: |
           Push-Location scrobblenaut
           try {
-            flutter pub add --dev json_serializable:6.15.1
+            flutter pub add --dev json_serializable:6.14.1
+            flutter pub add --dev source_helper:1.3.13
             flutter pub get
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
