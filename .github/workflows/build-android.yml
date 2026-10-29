@@ -49,6 +49,23 @@ jobs:
           acrcloudHumsApiSecret = '';
           "@ | Set-Content -Path lib/.env -Encoding utf8
 
+      - name: Set scrobblenaut Dart language version
+        shell: pwsh
+        run: |
+          $pubspecPath = "scrobblenaut/pubspec.yaml"
+          $pubspec = Get-Content -Path $pubspecPath -Raw
+
+          if ($pubspec -notmatch 'sdk:\s*">=3\.0\.0\s*<4\.0\.0"') {
+            Write-Error "No se encuentra la restricción SDK esperada en scrobblenaut/pubspec.yaml"
+            exit 1
+          }
+
+          $pubspec = $pubspec -replace 'sdk:\s*">=3\.0\.0\s*<4\.0\.0"', 'sdk: ">=3.8.0 <4.0.0"'
+          Set-Content -Path $pubspecPath -Value $pubspec -Encoding utf8
+
+          Write-Host "Restricción SDK actualizada:"
+          Get-Content $pubspecPath | Select-String -Pattern "sdk:"
+
       - name: Prepare custom dependencies
         shell: pwsh
         run: ./run_build_runner.ps1
