@@ -24,6 +24,20 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Install Android SDK 36
+        shell: pwsh
+        run: |
+          $sdkmanager = Get-ChildItem "$env:ANDROID_HOME\cmdline-tools" -Filter sdkmanager.bat -Recurse |
+            Select-Object -First 1 -ExpandProperty FullName
+
+          if (!$sdkmanager) {
+            Write-Error "No se encuentra sdkmanager.bat"
+            exit 1
+          }
+
+          & $sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
